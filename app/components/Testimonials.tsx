@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 const TESTIMONIALS = [
   {
@@ -47,11 +47,35 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const visibleCount = 3;
-  const maxIndex = TESTIMONIALS.length - visibleCount;
+  const [isPaused, setIsPaused] = useState(false);
+  const totalSlides = TESTIMONIALS.length;
+  const autoPlayDelay = 4500; // 4.5 seconds
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const handlePrev = () => setActiveIndex((i) => Math.max(0, i - 1));
-  const handleNext = () => setActiveIndex((i) => Math.min(maxIndex, i + 1));
+  const goTo = useCallback((index: number) => {
+    // Wrap around for infinite cycling
+    const newIndex = ((index % totalSlides) + totalSlides) % totalSlides;
+    setActiveIndex(newIndex);
+  }, [totalSlides]);
+
+  const handlePrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
+  const handleNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
+
+  // Auto-play
+  useEffect(() => {
+    if (isPaused) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % totalSlides);
+    }, autoPlayDelay);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isPaused, totalSlides]);
 
   return (
     <section
@@ -74,13 +98,16 @@ export default function Testimonials() {
         </div>
 
         {/* Cards Carousel */}
-        <div className="relative">
+        <div
+          className="relative"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           {/* Navigation Buttons */}
           <button
             onClick={handlePrev}
-            disabled={activeIndex === 0}
-            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-sky-100 text-sky-600 flex items-center justify-center hover:bg-sky-50 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-            aria-label="Previous testimonials"
+            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-sky-100 text-sky-600 flex items-center justify-center hover:bg-sky-50 transition-all duration-200"
+            aria-label="Previous testimonial"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -89,9 +116,8 @@ export default function Testimonials() {
 
           <button
             onClick={handleNext}
-            disabled={activeIndex >= maxIndex}
-            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-sky-100 text-sky-600 flex items-center justify-center hover:bg-sky-50 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-            aria-label="Next testimonials"
+            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border border-sky-100 text-sky-600 flex items-center justify-center hover:bg-sky-50 transition-all duration-200"
+            aria-label="Next testimonial"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -101,45 +127,47 @@ export default function Testimonials() {
           {/* Cards Container */}
           <div className="overflow-hidden mx-6">
             <div
-              className="flex gap-8 transition-transform duration-500 ease-out"
+              className="flex transition-transform duration-500 ease-out"
               style={{
-                transform: `translateX(-${activeIndex * (100 / visibleCount + 2.7)}%)`,
+                transform: `translateX(-${activeIndex * 100}%)`,
               }}
             >
               {TESTIMONIALS.map((t, i) => (
                 <div
                   key={i}
-                  className="min-w-[calc(33.333%-1.34rem)] flex-shrink-0 bg-white/90 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border border-sky-100/60 flex flex-col"
+                  className="w-full flex-shrink-0 px-4"
                 >
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-5">
-                    {Array.from({ length: 5 }).map((_, s) => (
-                      <svg
-                        key={s}
-                        className={`w-5 h-5 ${s < t.rating ? "text-amber-400" : "text-gray-200"}`}
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-
-                  {/* Quote */}
-                  <p className="text-gray-700 leading-relaxed mb-6 flex-1 italic">
-                    "{t.quote}"
-                  </p>
-
-                  {/* Author */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-sky-100">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-sm shadow">
-                      {t.name.charAt(0)}
+                  <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-10 border border-sky-100/60 flex flex-col items-center text-center">
+                    {/* Stars */}
+                    <div className="flex gap-1 mb-5">
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <svg
+                          key={s}
+                          className={`w-6 h-6 ${s < t.rating ? "text-amber-400" : "text-gray-200"}`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
                     </div>
-                    <div>
-                      <p className="font-semibold text-sky-800 text-sm">
-                        {t.name}
-                      </p>
-                      <p className="text-xs text-gray-400">{t.role}</p>
+
+                    {/* Quote */}
+                    <p className="text-gray-700 leading-relaxed mb-8 text-lg italic max-w-xl">
+                      "{t.quote}"
+                    </p>
+
+                    {/* Author */}
+                    <div className="flex items-center gap-3 pt-5 border-t border-sky-100 w-full justify-center">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-sm shadow">
+                        {t.name.charAt(0)}
+                      </div>
+                      <div className="text-left">
+                        <p className="font-semibold text-sky-800 text-sm">
+                          {t.name}
+                        </p>
+                        <p className="text-xs text-gray-400">{t.role}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -149,15 +177,15 @@ export default function Testimonials() {
 
           {/* Dots Indicator */}
           <div className="flex justify-center gap-2 mt-10">
-            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+            {TESTIMONIALS.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActiveIndex(i)}
-                aria-label={`Go to testimonial group ${i + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                onClick={() => goTo(i)}
+                aria-label={`Go to testimonial ${i + 1}`}
+                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                   i === activeIndex
-                    ? "w-8 bg-sky-500"
-                    : "w-2 bg-sky-200 hover:bg-sky-300"
+                    ? "w-9 bg-sky-500 shadow-md"
+                    : "w-2.5 bg-sky-200 hover:bg-sky-300"
                 }`}
               />
             ))}

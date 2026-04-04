@@ -66,10 +66,12 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
       style={{ backgroundColor: "rgba(12, 74, 110, 0.6)", backdropFilter: "blur(6px)" }}
     >
       <div
-        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl"
+        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl booking-modal-content"
         style={{
           animation: "modalSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
+          scrollbarWidth: "none",           /* Firefox */
+          msOverflowStyle: "none",          /* IE */
+        } as React.CSSProperties}
       >
         {/* Header */}
         <div className="sticky top-0 z-10 bg-gradient-to-r from-sky-800 to-sky-600 px-8 py-6 rounded-t-3xl flex items-center justify-between">
@@ -355,6 +357,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
       {/* Keyframe animations */}
       <style>{`
+        .booking-modal-content::-webkit-scrollbar {
+          display: none;
+        }
         @keyframes modalSlideIn {
           from {
             opacity: 0;
