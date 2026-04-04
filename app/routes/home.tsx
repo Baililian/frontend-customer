@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Route } from "./+types/home";
 import About from "~/components/About";
 import Services from "~/components/Services";
@@ -6,6 +7,7 @@ import Location from "~/components/Location";
 import Contact from "~/components/Contact";
 import Footer from "~/components/Footer";
 import NavBar from "~/components/NavBar";
+import BookingModal from "~/components/BookingModal";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -15,6 +17,8 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const [bookingOpen, setBookingOpen] = useState(false);
+
   return (
     <>
       <NavBar />
@@ -41,11 +45,17 @@ export default function Home() {
             </p>
 
             <div className="flex justify-center gap-6">
-              <button className="px-8 py-4 rounded-xl font-semibold bg-white text-sky-700 shadow-xl hover:scale-105 transition">
+              <button
+                onClick={() => setBookingOpen(true)}
+                className="px-8 py-4 rounded-xl font-semibold bg-white text-sky-700 shadow-xl hover:scale-105 transition"
+              >
                 Book Now
               </button>
 
-              <button className="px-8 py-4 rounded-xl font-semibold border-2 border-white hover:bg-white hover:text-sky-700 transition">
+              <button
+                onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
+                className="px-8 py-4 rounded-xl font-semibold border-2 border-white hover:bg-white hover:text-sky-700 transition"
+              >
                 View Rooms
               </button>
             </div>
@@ -56,9 +66,11 @@ export default function Home() {
         <Services />
         <Location />
         <Testimonials />
-        <Contact />
+        <Contact onBookingOpen={() => setBookingOpen(true)} />
         <Footer />
       </main>
+
+      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </>
   );
 }
