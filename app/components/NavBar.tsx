@@ -1,44 +1,59 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import photo from "~/images/temp-logo.png";
+import photo from "~/images/Waterland logo.png";
 
 export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Services", path: "/services" },
-    { name: "Location", path: "/location" },
-    { name: "Testimonials", path: "/testimonials" },
-    { name: "Contact", path: "/contact" },
+    { name: "Home", href: "#home" },
+    { name: "About", href: "#about" },
+    { name: "Services", href: "#services" },
+    { name: "Location", href: "#location" },
+    { name: "Testimonials", href: "#testimonials" },
+    { name: "Contact", href: "#contact" },
   ];
+
+  const handleScrollTo = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setMenuOpen(false);
+  };
 
   return (
     <nav className="fixed w-full top-0 left-0 z-50 backdrop-blur-md bg-white/80 shadow-md border-b border-surface">
       <div className="max-w-7xl mx-auto px-6 md:px-0 py-4 flex items-center justify-between relative">
         {/* LEFT - LOGO */}
-        <Link
-          to="/"
+        <a
+          href="#home"
+          onClick={(e) => handleScrollTo(e, "#home")}
           className="flex items-center gap-3 text-2xl font-bold text-primary-text tracking-wide"
         >
           <img src={photo} alt="logo" className="w-12 h-12 rounded-full shadow-md" />
           <h2 className="hidden sm:block">Waterland Resort</h2>
-        </Link>
+        </a>
 
         {/* DESKTOP LINKS */}
         <div className="hidden md:flex gap-8 items-center absolute left-1/2 transform -translate-x-1/2 text-primary-text font-medium">
           {navItems.map((item) => (
-            <Link
+            <a
               key={item.name}
-              to={item.path}
+              href={item.href}
+              onClick={(e) => handleScrollTo(e, item.href)}
               className="relative group transition"
             >
               <span className="capitalize hover:text-secondary transition">
                 {item.name}
               </span>
               <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-secondary transition-all group-hover:w-full"></span>
-            </Link>
+            </a>
           ))}
         </div>
 
@@ -73,14 +88,14 @@ export default function NavBar() {
         <div className="md:hidden backdrop-blur-lg bg-surface shadow-xl py-8 px-6 flex flex-col gap-6 text-primary-text">
           <div className="flex flex-col items-center gap-6 font-medium">
             {navItems.map((item) => (
-              <Link
+              <a
                 key={item.name}
-                to={item.path}
+                href={item.href}
+                onClick={(e) => handleScrollTo(e, item.href)}
                 className="hover:text-secondary transition text-lg"
-                onClick={() => setMenuOpen(false)}
               >
                 {item.name}
-              </Link>
+              </a>
             ))}
           </div>
 

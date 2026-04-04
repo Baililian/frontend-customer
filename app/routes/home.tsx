@@ -7,7 +7,7 @@ import Contact from "~/components/Contact";
 import Footer from "~/components/Footer";
 import NavBar from "~/components/NavBar";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Waterland Resort - Escape to Paradise" },
     { name: "description", content: "Experience unforgettable moments surrounded by crystal-clear waters and tropical beauty at Waterland Resort." },
@@ -24,7 +24,7 @@ export default function Home() {
           className="relative h-screen flex items-center justify-center text-center bg-cover bg-center"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')",
+              "url('https://images.unsplash.com/photo-1676089775678-f81f7253103e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
           }}
           id="home"
         >
