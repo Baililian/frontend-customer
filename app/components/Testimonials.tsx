@@ -79,7 +79,7 @@ export default function Testimonials() {
 
   return (
     <section
-      className="bg-gradient-to-b from-sky-100 to-white py-28 px-6 md:px-24 overflow-hidden"
+      className="The class `bg-gradient-to-b` can be written as `bg-linear-to-b` from-sky-100 to-white py-28 px-6 md:px-24 overflow-hidden"
       id="testimonials"
     >
       <div className="max-w-6xl mx-auto">
