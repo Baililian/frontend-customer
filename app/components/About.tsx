@@ -1,7 +1,5 @@
-import aerialImg from '../images/waterland-sample.png'; //temporary image, replace with actual aerial view of the resort when available
-import lobbyImg from '../images/waterlandroom.png'; // temporary image, replace with actual lobby image of the resort when available
-// if you use the logo elsewhere in this component you can import it too:
-// import logo from '../../images/logo.png';
+import aerialImg from '../images/waterland-sample.png'; 
+import lobbyImg from '../images/waterlandroom.png'; 
 
 export default function About() {
     return (
