@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useState } from "react";
 import DashboardContent from "~/components/DashboardContent";
-import NavBar from "~/components/NavBar";
+import Header from "~/components/Header";
 
 const navItems = [
   { key: "home", label: "🏠 Home" },
@@ -18,7 +18,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-100">
       <div className="fixed top-0 left-0 right-0 z-50">
-        <NavBar />
+        <Header />
       </div>
 
       <div className="flex pt-20">
