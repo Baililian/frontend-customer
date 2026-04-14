@@ -6,7 +6,7 @@ export default function Contact({ onBookingOpen }: ContactProps) {
   return (
     <section className="relative overflow-hidden" id="contact">
       {/* ── Contact Info + Form Grid ── */}
-      <div className="bg-gradient-to-b from-sky-50 to-white py-28 px-6 md:px-24">
+      <div className="bg-linear-to-b from-sky-50 to-white py-28 px-6 md:px-24">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
             <p className="text-sky-500 font-semibold tracking-widest uppercase text-sm mb-3">

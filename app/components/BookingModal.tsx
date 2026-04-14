@@ -62,7 +62,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 z-100 flex items-center justify-center p-4"
       style={{ backgroundColor: "rgba(12, 74, 110, 0.6)", backdropFilter: "blur(6px)" }}
     >
       <div
@@ -74,7 +74,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
         } as React.CSSProperties}
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-gradient-to-r from-sky-800 to-sky-600 px-8 py-6 rounded-t-3xl flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-linear-to-r from-sky-800 to-sky-600 px-8 py-6 rounded-t-3xl flex items-center justify-between">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>
               Book Your Stay
